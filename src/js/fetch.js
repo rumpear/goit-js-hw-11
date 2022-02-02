@@ -62,16 +62,16 @@ async function onLoadMoreClick() {
   try {
     renderImg(hits);
 
-    if (hits.length < 40) {
+    if (hits.length === 0) {
       Notiflix.Notify.info("We're sorry, but you've reached the end of search results");
       // refs.loadMoreBtn.hidden = true;
       window.removeEventListener('scroll', scrollThrottled);
     }
-  } catch {
-    // console.log(error);
-    Notiflix.Notify.info("We're sorry, but you've reached the end of search results");
-    window.removeEventListener('scroll', scrollThrottled);
-    return;
+  } catch (error) {
+    console.log(error);
+    // Notiflix.Notify.info("We're sorry, but you've reached the end of search results");
+    // window.removeEventListener('scroll', scrollThrottled);
+    // return;
   }
 
   // * work
