@@ -56,10 +56,9 @@ async function onSearch(e) {
 }
 
 async function onLoadMoreClick() {
-  // * catch doesnt work
-  const { hits } = await pixabayApi.fetchImg();
-
   try {
+    const { hits } = await pixabayApi.fetchImg();
+
     renderImg(hits);
 
     if (hits.length === 0) {
@@ -69,7 +68,7 @@ async function onLoadMoreClick() {
     }
   } catch (error) {
     console.log(error);
-    // Notiflix.Notify.info("We're sorry, but you've reached the end of search results");
+    // Notiflix.Notify.info('YEP');
     // window.removeEventListener('scroll', scrollThrottled);
     // return;
   }
