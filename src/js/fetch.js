@@ -13,32 +13,30 @@ const refs = {
 };
 
 refs.searchForm.addEventListener('submit', onSearch);
-
 refs.loadMoreBtn.addEventListener('click', onLoadMoreClick);
-refs.loadMoreBtn.hidden = true;
+
+hideSpinner();
 
 let gallery = new SimpleLightbox('.gallery a');
 const pixabayApi = new PixabayApiService();
 
-const scrollThrottled = throttle(infiniteScroll, 500);
-
 async function onSearch(e) {
   e.preventDefault();
   cleanupRender();
+  showSpinner();
 
   pixabayApi.query = e.currentTarget.elements.searchQuery.value.trim();
   pixabayApi.resetPage();
 
   if (!pixabayApi.query) {
     cleanupRender();
-    refs.loadMoreBtn.hidden = true;
-    // refs.searchForm.elements.search.disabled = true;
     return;
   }
 
   try {
     const { totalHits, hits } = await pixabayApi.fetchImg();
-    // console.log(totalHits, hits);
+
+    disableSearchBtn();
 
     if (hits.length === 0) {
       Notiflix.Notify.failure(
@@ -46,74 +44,110 @@ async function onSearch(e) {
       );
       return;
     }
+
     Notiflix.Notify.success(`Hooray! We found ${totalHits} images`);
     renderImg(hits);
   } catch (error) {
-    // console.log(error);
+    console.log(error);
+  } finally {
+    enableSearchBtn();
+    hideSpinner();
   }
-
-  window.addEventListener('scroll', scrollThrottled);
+  addInfiniteScroll();
 }
 
 async function onLoadMoreClick() {
   try {
-    const { hits } = await pixabayApi.fetchImg();
+    const data = await pixabayApi.fetchImg();
 
-    renderImg(hits);
+    showSpinner();
 
-    if (hits.length === 0) {
+    if (!data || data.hits.length === 0) {
+      removeInfiniteScroll();
       Notiflix.Notify.info("We're sorry, but you've reached the end of search results");
-      // refs.loadMoreBtn.hidden = true;
-      window.removeEventListener('scroll', scrollThrottled);
+      hideSpinner();
     }
+
+    renderImg(data.hits);
   } catch (error) {
     console.log(error);
-    // Notiflix.Notify.info('YEP');
-    // window.removeEventListener('scroll', scrollThrottled);
-    // return;
+    hideSpinner();
   }
-
-  // * work
-  // pixabayApi
-  //   .fetchImg()
-  //   .then(({ hits }) => {
-  //     // console.log(hits.length);
-  //     renderImg(hits);
-
-  //     if (hits.length < 40) {
-  //       Notiflix.Notify.info("We're sorry, but you've reached the end of search results");
-  //       // refs.loadMoreBtn.hidden = true;
-  //       window.removeEventListener('scroll', scrollThrottled);
-  //     }
-  //   })
-  //   .catch(() => {
-  //     Notiflix.Notify.info("We're sorry, but you've reached the end of search results");
-  //     window.removeEventListener('scroll', scrollThrottled);
-  //     return;
-  //   });
 }
 
+// render
 function renderImg(hits) {
   const markup = hits.map(imgCardsTpl).join('');
   refs.gallery.insertAdjacentHTML('beforeend', markup);
   gallery.refresh();
-  // console.log(markup);
-  // smoothFn();
 }
 
 function cleanupRender() {
   refs.gallery.innerHTML = '';
 }
 
+// buttons
+function disableSearchBtn() {
+  refs.searchForm.elements.search.disabled = true;
+}
+
+function enableSearchBtn() {
+  refs.searchForm.elements.search.disabled = false;
+}
+
+// scroll
 function infiniteScroll() {
   const documentRect = document.documentElement.getBoundingClientRect();
 
-  console.log('top', documentRect.top);
-  console.log('bottom', documentRect.bottom);
-  console.log('clientHeight', document.documentElement.clientHeight);
+  // console.log('top', documentRect.top);
+  // console.log('bottom', documentRect.bottom);
+  // console.log('clientHeight', document.documentElement.clientHeight);
   if (documentRect.bottom < document.documentElement.clientHeight + 500) {
     onLoadMoreClick();
   }
+}
+
+enableIntersectionObserver();
+function enableIntersectionObserver() {
+  const options = {
+    root: document.querySelector('.container'),
+    threshold: 1,
+  };
+
+  const handleObserver = ([item]) => {
+    item.isIntersecting;
+    if (item.isIntersecting) {
+      console.log(item.isIntersecting);
+      onLoadMoreClick();
+      console.log(1);
+    }
+  };
+
+  const observer = new IntersectionObserver(handleObserver, options);
+  observer.observe(refs.loadMoreBtn);
+}
+
+const scrollThrottled = throttle(infiniteScroll, 600);
+
+function addInfiniteScroll() {
+  window.addEventListener('scroll', scrollThrottled);
+}
+
+function removeInfiniteScroll() {
+  window.removeEventListener('scroll', scrollThrottled);
+}
+
+// spinner
+function hideSpinner() {
+  // refs.loadMoreBtn.classList.add('is-hidden');
+  // refs.loadMoreBtn.hidden = true;
+  refs.loadMoreBtn.style.display = 'none';
+}
+
+function showSpinner() {
+  // refs.loadMoreBtn.classList.remove('is-hidden');
+  // refs.loadMoreBtn.hidden = false;
+  refs.loadMoreBtn.style.display = 'block';
 }
 
 // * smooth
