@@ -15,9 +15,20 @@
     <div class="container">
       <include src="./partials/form.html"></include>
       <div class="gallery"></div>
-      <button type="button" class="load-more">Load more</button>
+      <button type="button" class="load-more">
+        <div class="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </button>
+      <button class="btn-up is-hidden" type="button">
+        <svg class="team-social__icon" width="20" height="20">
+          <use href="./images/sprite.svg#icon-up-arrow"></use>
+        </svg>
+      </button>
     </div>
     <script src="./index.js"></script>
   </body>
 </html>
-
