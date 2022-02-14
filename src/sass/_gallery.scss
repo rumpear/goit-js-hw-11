@@ -1,6 +1,10 @@
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  --animation-duration: 250ms;
+  --animation-duration: 300ms;
 }
 
 $primary-text-color: #212121;
@@ -14,15 +18,18 @@ $third-bg-color: #f5f4fa;
 $icon-primary-color: #afb1b8;
 
 $timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+$animation-duration: 300ms;
 
 .gallery {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+
   // max-width: 1140px;
   // grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   // grid-auto-rows: 240px;
   // grid-gap: 12px;
-  justify-content: center;
+
   // padding: 0;
   // list-style: none;
   // margin-left: auto;
@@ -47,15 +54,13 @@ $timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
   object-fit: cover;
   transition: transform var(--animation-duration) var(--timing-function);
+
+  position: relative;
 }
-
-
 
 .gallery__img:hover {
   transform: scale(1.03);
 }
-
-
 
 .container {
   width: 2000px;
@@ -104,7 +109,8 @@ $timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 200px;
   height: 50px;
 
-  transition: background-color 250ms $timing-function, box-shadow 250ms $timing-function;
+  transition: background-color $animation-duration $timing-function,
+    box-shadow $animation-duration $timing-function;
 
   &:hover,
   &:focus {
@@ -117,14 +123,15 @@ $timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   // width: 400px;
 }
 
-.info {
+.gallery__info {
   display: flex;
   font-size: 9px;
   text-align: center;
   justify-content: center;
+  position: absolute;
 }
 
-.info-item {
+.gallery__info-item {
   margin-right: 6px;
 }
 
@@ -157,3 +164,105 @@ $timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 //       </p>
 //     </div>
 //   </div>
+
+.container {
+  position: relative;
+}
+
+.btn-up {
+  @extend %btn;
+  // @extend .search-form__button;
+
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  // z-index: 10000000;
+
+  // font-size: 55px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+
+  opacity: 1;
+  transition: opacity $animation-duration $timing-function,
+    visibility $animation-duration $timing-function,
+    background-color $animation-duration $timing-function, fill $animation-duration $timing-function;
+
+  &:hover {
+    background-color: #2196f3;
+  }
+  &:hover .team-social__icon {
+    fill: rgb(239, 239, 239);
+  }
+}
+
+.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.team-social__icon {
+  fill: currentColor;
+  transition: fill $animation-duration $timing-function;
+}
+
+.load-more {
+  // position: absolute;
+  // top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
+
+  // position: fixed;
+  // bottom: 30px;
+  // right: 500px;
+
+  display: block;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+
+  border: none;
+  background-color: transparent;
+
+  // height: 400px;
+  // width: 300px;
+  // background-color: black;
+}
+
+// spinner
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #188ce8 transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
