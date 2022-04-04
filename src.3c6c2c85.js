@@ -87,4 +87,4 @@ module.exports=require("./lib/axios");
 },{"lodash.throttle":"FNyO"}],"Focm":[function(require,module,exports) {
 "use strict";require("./sass/main.scss"),require("./js/fetch"),require("./js/btnUp");
 },{"./sass/main.scss":"clu1","./js/fetch":"spyz","./js/btnUp":"zvDW"}]},{},["Focm"], null)
-//# sourceMappingURL=/goit-js-hw-11/src.cbc86c99.js.map
+//# sourceMappingURL=/goit-js-hw-11/src.3c6c2c85.js.map
