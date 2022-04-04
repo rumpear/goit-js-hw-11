@@ -13,7 +13,6 @@ function scrollFunction() {
   } else {
     btnUpRef.classList.add('is-hidden');
   }
-  // console.log(1);
 }
 
 window.addEventListener('scroll', throttle(scrollFunction, 600));
